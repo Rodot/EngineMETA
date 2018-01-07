@@ -8,9 +8,11 @@ Object::Object() {
   x = random(8, 72);
   y = random(8, 56);
   width = random(2, 2);
-  height = random(2, 2);;
-  vx = random(0, 2) - 0.5f;
-  vy = random(0, 2) - 0.5f;
+  height = random(2, 2);
+  vx = random(0, 5) - 2;
+  vy = random(0, 5) - 2;
+  bounce = 0.8;
+  friction = 0.8;
 }
 
 Object::Object(float X, float Y, float W, float H) {
@@ -34,18 +36,22 @@ Object::Object(float X, float Y, float W, float H, float VX, float VY) {
 void Object::update() {
   x += vx;
   if (collideTile() > 0) {
+    float step = norm(vx)*0.5;
     do {
-      x -= norm(vx);
+      x -= step;
     } while (collideTile() > 0);
-    vx *= -1;
+    vx *= - bounce;
+    vy *= friction;
   }
 
   y += vy;
   if (collideTile() > 0) {
+    float step = norm(vy)*0.5;
     do {
-      y -= norm(vy);
+      y -= step;
     } while (collideTile() > 0);
-    vy *= -1;
+    vy *= - bounce;
+    vx *= friction;
   }
 
   vy += Engine::gravity;

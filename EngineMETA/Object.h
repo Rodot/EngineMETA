@@ -5,7 +5,7 @@
 
 class Object {
   public:
-    float x, y, vx, vy, width, height;
+    float x, y, vx, vy, width, height, bounce, friction;
 
     Object();
     Object(float X, float Y, float W, float H);
