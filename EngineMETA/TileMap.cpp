@@ -1,21 +1,25 @@
 #include "TileMap.h"
+
 #include <Gamebuino-Meta.h>
+#include "Engine.h"
 
 uint8_t myMap[] = {
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  1, 0, 1, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 1, 1, 0, 0, 0, 1,
-  1, 0, 0, 1, 1, 0, 0, 0, 0, 1,
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1,
+  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
 TileMap::TileMap() {
   data = myMap;
-  widthTiles = 10;
-  heightTiles = 8;
+  widthTiles = 12;
+  heightTiles = 10;
   tileWidth = 8;
   tileHeight = 8;
 }
@@ -25,7 +29,7 @@ void TileMap::draw() {
   for (int i = 0; i < widthTiles; i++) {
     for (int j = 0; j < heightTiles; j++) {
       if (data[i + (j * widthTiles)] > 0) {
-        gb.display.drawRect(i * tileWidth, j * tileHeight, tileWidth, tileHeight);
+        gb.display.drawRect(i * tileWidth - Engine::cameraX, j * tileHeight - Engine::cameraY, tileWidth, tileHeight);
       }
     }
   }

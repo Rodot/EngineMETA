@@ -3,6 +3,8 @@
 
 //static variables
 float Engine::gravity = 0.1;
+float Engine::cameraX = 8;
+float Engine::cameraY = 8;
 Object* Engine::objects[ENGINE_NUM_OBJECTS];
 TileMap* Engine::map;
 
@@ -30,7 +32,9 @@ void Engine::draw() {
       objects[i]->draw();
     }
   }
-  gb.display.println(gb.getCpuLoad());
+  gb.display.print(gb.getCpuLoad());
+  gb.display.print("%");
+  gb.display.println(gb.getFreeRam());
 }
 
 int Engine::addObject(Object* object) {

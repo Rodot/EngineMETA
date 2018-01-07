@@ -6,8 +6,8 @@
 Object::Object() {
   x = random(8, 72);
   y = random(8, 56);
-  width = random(2, 11);
-  height = random(2, 11);;
+  width = random(2, 2);
+  height = random(2, 2);;
   vx = random(0, 2) - 0.5f;
   vy = random(0, 2) - 0.5f;
   density = 1;
@@ -55,7 +55,7 @@ void Object::update() {
 
 void Object::draw() {
   gb.display.setColor(WHITE);
-  gb.display.drawRect(x, y, width, height);
+  gb.display.drawRect(x - Engine::cameraX, y - Engine::cameraY, width, height);
 }
 
 int16_t Object::collideTile() {
@@ -72,7 +72,7 @@ int16_t Object::collideTile() {
 }
 
 int16_t Object::collide(Object* obj) {
-  collideRectRect(x, y, width, height, obj->x, obj->y, obj->width, obj->height);
+  return collideRectRect(x, y, width, height, obj->x, obj->y, obj->width, obj->height);
 }
 
 

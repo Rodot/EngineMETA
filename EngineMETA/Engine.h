@@ -4,11 +4,11 @@
 #include "Object.h"
 #include "TileMap.h"
 
-#define ENGINE_NUM_OBJECTS 20
+#define ENGINE_NUM_OBJECTS 32
 
 class Engine {
   public:
-    static float gravity;
+    static float gravity, cameraX, cameraY;
     static Object *objects[ENGINE_NUM_OBJECTS];
     static TileMap *map;
 
