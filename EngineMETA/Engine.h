@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "TileMap.h"
 
-#define ENGINE_NUM_OBJECTS 32
+#define ENGINE_NUM_OBJECTS 20
 
 class Engine {
   public:
