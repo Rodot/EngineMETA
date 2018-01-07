@@ -1,4 +1,5 @@
 #include "Object.h"
+
 #include <Gamebuino-Meta.h>
 #include "Engine.h"
 #include "Toolbox.c"
@@ -10,7 +11,6 @@ Object::Object() {
   height = random(2, 2);;
   vx = random(0, 2) - 0.5f;
   vy = random(0, 2) - 0.5f;
-  density = 1;
 }
 
 Object::Object(float X, float Y, float W, float H) {
@@ -20,17 +20,15 @@ Object::Object(float X, float Y, float W, float H) {
   height = H;
   vx = 0;
   vy = 0;
-  density = 1;
 }
 
-Object::Object(float X, float Y, float W, float H, float VX, float VY, float D) {
+Object::Object(float X, float Y, float W, float H, float VX, float VY) {
   x = X;
   y = Y;
   vx = VX;
   vy = VY;
   width = W;
   height = H;
-  density = D;
 }
 
 void Object::update() {
@@ -50,8 +48,10 @@ void Object::update() {
     vy *= -1;
   }
 
-  vy += Engine::gravity * density;
+  vy += Engine::gravity;
 }
+
+
 
 void Object::draw() {
   gb.display.setColor(WHITE);
