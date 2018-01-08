@@ -7,8 +7,8 @@
 Object::Object() {
   x = random(8, 72);
   y = random(8, 56);
-  width = random(4,8);
-  height = random(4,8);
+  width = 6;
+  height = 6;
   vx = random(0, 3) - 1;
   vy = random(0, 3) - 1;
   bounce = 0.8;
@@ -37,77 +37,46 @@ void Object::update() {
   vy += Engine::gravity;
   vy *= friction;
   vx *= friction;
-  vx = constrain(vx, -2, 2);
-  vy = constrain(vy, -2, 2);
+  vx = constrain(vx, -3, 3);
+  vy = constrain(vy, -3, 3);
   if (abs(vx) < 0.1) vx = 0;
   if (abs(vy) < 0.1) vy = 0;
+  //x += vx;
+  //y += vy;
   x += vx;
-  y += vy;
-  /*x += vx;
-    if (collideTile() > 0) {
-    float step = norm(vx) * 0.5;
-    do {
-      x -= step;
-    } while (collideTile() > 0);
-    vx *= - bounce;
+
+  if (vx > 0) {
+    if ((Engine::map->getTile(x + width, y) > 0) || (Engine::map->getTile(x + width, y + height) > 0)) {
+      uint16_t tileX = (((uint16_t)(x + width) / (uint16_t)Engine::map->tileWidth) * (uint16_t)Engine::map->tileWidth);
+      x = tileX - width - 0.01;
+      vx *= - bounce;
     }
-
-    y += vy;
-    if (collideTile() > 0) {
-    float step = norm(vy) * 0.5;
-    do {
-      y -= step;
-    } while (collideTile() > 0);
-    vy *= - bounce;
-    }*/
-
-  //distance between centers
-  float dx, dy;
-  //penetration depth
-  float px, py;
-  float tileCenterX, tileCenterY;
-  bool collision = false;
-  float tileWidth = Engine::map->tileWidth;
-  float tileHeight = Engine::map->tileHeight;
-
-  for (float tx = x; tx <= (x + width); tx += width) {
-    //tx = min(x + width, tx);
-    for (float ty = y; ty <= (y + height); ty += height) {
-      //ty = min(y + height, ty);
-      if (Engine::map->getTile(tx, ty)) {
-        collision = true;
-        //distance between the tile center and the object center
-        float tileX = (((uint16_t)tx / (uint16_t)tileWidth) * (uint16_t)tileWidth);
-        float tileY = (((uint16_t)ty / (uint16_t)tileHeight) * (uint16_t)tileHeight);
-        dx =  tileX + (tileWidth / 2) - x;
-        dy =  tileY + (tileHeight / 2) - y;
-        if ((dx >= 0) && (dy >= 0)) { //bottom right corner
-          px = (x + width) - tileX;
-          py = (y + height) - tileY;
-        } else if ((dx >= 0) && (dy <= 0)) { //top right corner
-          px = (x + width) - tileX;
-          py = y - (tileY + tileHeight);
-        } else if ((dx <= 0) && (dy <= 0)) { //top left corner
-          px = x - (tileX + tileWidth);
-          py = y - (tileY + tileHeight);
-        } else { //bottom left corner
-          px = x - (tileX + tileWidth);
-          py = (y + height) - tileY;
-        }
-        if (abs(px) < abs(py)) { //horizontal collision
-          x -= px;
-          vx *= -bounce;
-        } else { //vertical collision
-          y -= py;
-          vy *= -bounce;
-        }
-      }
+  }
+  else {
+    if ((Engine::map->getTile(x, y) > 0) || (Engine::map->getTile(x, y + height) > 0)) {
+      uint16_t tileX = (((uint16_t)x / (uint16_t)Engine::map->tileWidth) * (uint16_t)Engine::map->tileWidth);
+      x = tileX + Engine::map->tileWidth + 0.01;
+      vx *= - bounce;
     }
   }
 
+  y += vy;
+  if (vy > 0) {
+    if ((Engine::map->getTile(x, y + height) > 0) || (Engine::map->getTile(x + width, y + height) > 0)) {
+      uint16_t tileY = (((uint16_t)(y + height) / (uint16_t)Engine::map->tileHeight) * (uint16_t)Engine::map->tileHeight);
+      y = tileY - height - 0.01;
+      vy *= - bounce;
+    }
+  } else {
+    if ((Engine::map->getTile(x, y) > 0) || (Engine::map->getTile(x + width, y) > 0)) {
+      uint16_t tileY = (((uint16_t)y / (uint16_t)Engine::map->tileHeight) * (uint16_t)Engine::map->tileHeight);
+      y = tileY + Engine::map->tileHeight + 0.01;
+      vy *= - bounce;
+    }
+  }
 }
 
-void Object::interact(Object* obj) {
+void Object::interact(Object * obj) {
   if (collide(obj)) {
     if ((vx == 0) && (vy == 0)) {
       return;
@@ -134,7 +103,7 @@ void Object::interact(Object* obj) {
       py = (y + height) - obj->y;
     }
     if (abs(px) < abs(py)) { //horizontal collision
-      x -= px;
+      x -= (px + 0.01);
 
       float v1 = vx;
       float m1 = width * height;
@@ -146,7 +115,7 @@ void Object::interact(Object* obj) {
       obj->vx *= obj->bounce * bounce;
 
     } else { //vertical collision
-      y -= py;
+      y -= (py + 0.01);
 
       float v1 = vy;
       float m1 = width * height;
@@ -161,24 +130,23 @@ void Object::interact(Object* obj) {
 }
 
 void Object::draw() {
-  gb.display.setColor(WHITE);
-  gb.display.drawRect(x - Engine::cameraX, y - Engine::cameraY, width, height);
+  gb.display.drawRect((int16_t)(x + 0.05) - (int16_t)Engine::cameraX, (int16_t)(y + 0.05) - (int16_t)Engine::cameraY, width, height);
 }
 
 int16_t Object::collideTile() {
   int16_t tile = -1;
   int16_t temp = Engine::map->getTile(x, y);
   if (temp > tile) tile = temp;
-  temp = Engine::map->getTile(x + width - 1, y);
+  temp = Engine::map->getTile(x + width, y);
   if (temp > tile) tile = temp;
-  temp = Engine::map->getTile(x, y + height - 1);
+  temp = Engine::map->getTile(x, y + height);
   if (temp > tile) tile = temp;
-  temp = Engine::map->getTile(x + width - 1, y + height - 1);
+  temp = Engine::map->getTile(x + width, y + height);
   if (temp > tile) tile = temp;
   return tile;
 }
 
-int16_t Object::collide(Object* obj) {
+int16_t Object::collide(Object * obj) {
   return collideRectRect(x, y, width, height, obj->x, obj->y, obj->width, obj->height);
 }
 

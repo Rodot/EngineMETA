@@ -2,7 +2,7 @@
 #include <Gamebuino-Meta.h>
 
 //static variables
-float Engine::gravity = 0.2;
+float Engine::gravity = 0.3;
 float Engine::cameraX = 8;
 float Engine::cameraY = 8;
 float Engine::cameraTargetX = 8;
@@ -31,7 +31,7 @@ void Engine::update() {
       }
     }
   }
-  
+
 }
 
 void Engine::draw() {
@@ -42,6 +42,8 @@ void Engine::draw() {
   }
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) continue;
+    gb.display.setColor(WHITE);
+    if (i == 0)   gb.display.setColor(LIGHTBLUE);
     objects[i]->draw();
   }
   gb.display.print(gb.getCpuLoad());

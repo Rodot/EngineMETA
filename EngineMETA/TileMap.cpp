@@ -40,7 +40,7 @@ uint8_t myMap[] = {
   1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1,
   1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
   1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
   1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
@@ -58,7 +58,7 @@ void TileMap::draw() {
   for (int i = 0; i < widthTiles; i++) {
     for (int j = 0; j < heightTiles; j++) {
       if (data[i + (j * widthTiles)] > 0) {
-        gb.display.drawRect(i * tileWidth - Engine::cameraX, j * tileHeight - Engine::cameraY, tileWidth, tileHeight);
+        gb.display.drawRect(i * tileWidth - (int16_t)Engine::cameraX, j * tileHeight - (int16_t)Engine::cameraY, tileWidth, tileHeight);
       }
     }
   }

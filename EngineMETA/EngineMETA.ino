@@ -38,8 +38,8 @@ void loop() {
       //Engine::objects[i]->y = random(8, 56);
       //Engine::objects[i]->width = random(4,12);
       //Engine::objects[i]->height = random(4,12);
-      Engine::objects[i]->vx = random(0, 3) - 1;
-      Engine::objects[i]->vy = random(0, 3) - 1;
+      Engine::objects[i]->vx = random(0, 6) - 2;
+      Engine::objects[i]->vy = random(0, 6) - 2;
       }
   }
   engine.update();
