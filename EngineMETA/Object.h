@@ -16,6 +16,8 @@ class Object {
     void draw();
     int16_t collideTile();
     int16_t collide(Object* obj);
+    float getCenterX();
+    float getCenterY();
 };
 
 #endif // _OBJECT_H_

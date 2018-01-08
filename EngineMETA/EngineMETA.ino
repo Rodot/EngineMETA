@@ -6,10 +6,7 @@ void setup() {
   gb.begin();
   engine.init();
 
-  //while (engine.addObject(new Object()));
-  engine.addObject(new Object());
-  engine.addObject(new Object());
-  engine.addObject(new Object());
+  while (engine.addObject(new Object()));
 
   engine.setTileMap(new TileMap());
 }
@@ -33,17 +30,17 @@ void loop() {
   if (gb.buttons.pressed(BUTTON_A)) {
     Engine::gravity *= -1;
   }
-  Engine::cameraX = Engine::objects[0]->x - gb.display.width() / 2;
-  Engine::cameraY = Engine::objects[0]->y - gb.display.height() / 2;
+  Engine::cameraX = Engine::objects[0]->getCenterX() - gb.display.width() / 2;
+  Engine::cameraY = Engine::objects[0]->getCenterY() - gb.display.height() / 2;
   if (gb.buttons.pressed(BUTTON_B)) {
-    /*for (uint16_t i = 0; i < ENGINE_NUM_OBJECTS; i++) {
+    for (uint16_t i = 0; i < ENGINE_NUM_OBJECTS; i++) {
       Engine::objects[i]->x = random(8, 72);
       Engine::objects[i]->y = random(8, 56);
       Engine::objects[i]->width = random(4,8);
       Engine::objects[i]->height = random(4,8);
       Engine::objects[i]->vx = random(0, 3) - 1;
       Engine::objects[i]->vy = random(0, 3) - 1;
-      }*/
+      }
     Engine::objects[0]->x = random(8, 72);
     Engine::objects[0]->y = random(8, 56);
     Engine::objects[0]->width = random(4, 8);

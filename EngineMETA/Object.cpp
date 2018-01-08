@@ -12,7 +12,7 @@ Object::Object() {
   vx = random(0, 3) - 1;
   vy = random(0, 3) - 1;
   bounce = 0.9;
-  friction = 0;
+  friction = 0.95;
 }
 
 Object::Object(float X, float Y, float W, float H) {
@@ -42,7 +42,6 @@ void Object::update() {
       x -= step;
     } while (collideTile() > 0);
     vx *= - bounce;
-    vy *= friction;
   }
 
   y += vy;
@@ -52,10 +51,11 @@ void Object::update() {
       y -= step;
     } while (collideTile() > 0);
     vy *= - bounce;
-    vx *= friction;
   }
 
   vy += Engine::gravity;
+  vy *= friction;
+  vx *= friction;
   vx = constrain(vx, -2, 2);
   vy = constrain(vy, -2, 2);
   if (abs(vx) < 0.1) vx = 0;
@@ -64,37 +64,32 @@ void Object::update() {
 
 void Object::interact(Object* obj) {
   if (collide(obj)) {
-    int16_t dx;
-    int16_t dy;
     if ((vx == 0) && (vy == 0)) {
       return;
     }
-    if (vx == 0) { //vertical collision
-      dx = 1;
-      dy = 0;
-    } else if (vy == 0) { //horizontal collision
-      dx = 0;
-      dy = 1;
-    } else if ((vx > 0) && (vy > 0)) { //bottom right corner
-      dx = (x + width) - obj->x;
-      dy = (y + height) - obj->y;
-    } else if ((vx > 0) && (vy <= 0)) { //top right corner
-      dx = (x + width) - obj->x;
-      dy = y - (obj->y + obj->height);
-    } else if ((vx < 0) && (vy < 0)) { //top left corner
-      dx = x - (obj->x + obj->width);
-      dy = y - (obj->y + obj->height);
+    //distance between centers
+    int16_t dx, dy;
+    //penetration depth
+    int16_t px, py;
+
+    dx = obj->getCenterX() - getCenterX();
+    dy = obj->getCenterY() - getCenterY();
+
+    if ((dx >= 0) && (dy >= 0)) { //bottom right corner
+      px = (x + width) - obj->x;
+      py = (y + height) - obj->y;
+    } else if ((dx >= 0) && (dy <= 0)) { //top right corner
+      px = (x + width) - obj->x;
+      py = y - (obj->y + obj->height);
+    } else if ((dx <= 0) && (dy <= 0)) { //top left corner
+      px = x - (obj->x + obj->width);
+      py = y - (obj->y + obj->height);
     } else { //bottom left corner
-      dx = x - (obj->x + obj->width);
-      dy = (y + width) - obj->y;
+      px = x - (obj->x + obj->width);
+      py = (y + width) - obj->y;
     }
-    dx = abs(dx);
-    dy = abs(dy);
-    if (dx < dy) { //horizontal collision
-      float step = norm(vx) * 0.5;
-      do {
-        x -= step;
-      } while (collide(obj) > 0);
+    if (abs(px) < abs(py)) { //horizontal collision
+      x -= px;
 
       float v1 = vx;
       float m1 = width * height;
@@ -104,10 +99,7 @@ void Object::interact(Object* obj) {
       obj->vx = v1 * 2 * m1 / (m1 + m2) + v2 * (m2 - m1) / (m1 + m2);
 
     } else { //vertical collision
-      float step = norm(vy) * 0.5;
-      do {
-        y -= step;
-      } while (collide(obj) > 0);
+      y -= py;
 
       float v1 = vy;
       float m1 = width * height;
@@ -139,6 +131,14 @@ int16_t Object::collideTile() {
 
 int16_t Object::collide(Object* obj) {
   return collideRectRect(x, y, width, height, obj->x, obj->y, obj->width, obj->height);
+}
+
+float Object::getCenterX() {
+  return (x + width / 2);
+}
+
+float Object::getCenterY() {
+  return (y + height / 2);
 }
 
 
