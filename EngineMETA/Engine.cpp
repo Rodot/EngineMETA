@@ -2,9 +2,11 @@
 #include <Gamebuino-Meta.h>
 
 //static variables
-float Engine::gravity = 0.3;
+float Engine::gravity = 0.2;
 float Engine::cameraX = 8;
 float Engine::cameraY = 8;
+float Engine::cameraTargetX = 8;
+float Engine::cameraTargetY = 8;
 Object* Engine::objects[ENGINE_NUM_OBJECTS];
 TileMap* Engine::map;
 
@@ -29,9 +31,12 @@ void Engine::update() {
       }
     }
   }
+  
 }
 
 void Engine::draw() {
+  cameraX = (cameraX * 7 + cameraTargetX) / 8;
+  cameraY = (cameraY * 7 + cameraTargetY) / 8;
   if (map != 0) {
     map->draw();
   }

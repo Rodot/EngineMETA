@@ -7,12 +7,12 @@
 Object::Object() {
   x = random(8, 72);
   y = random(8, 56);
-  width = 8;
-  height = 8;
+  width = random(4,8);
+  height = random(4,8);
   vx = random(0, 3) - 1;
   vy = random(0, 3) - 1;
-  bounce = 0.9;
-  friction = 0.95;
+  bounce = 0.8;
+  friction = 0.98;
 }
 
 Object::Object(float X, float Y, float W, float H) {
@@ -65,20 +65,20 @@ void Object::update() {
   float dx, dy;
   //penetration depth
   float px, py;
-  uint16_t tileCenterX, tileCenterY;
+  float tileCenterX, tileCenterY;
   bool collision = false;
-  int16_t tileWidth = Engine::map->tileWidth;
-  int16_t tileHeight = Engine::map->tileHeight;
+  float tileWidth = Engine::map->tileWidth;
+  float tileHeight = Engine::map->tileHeight;
 
-  for (float tx = x; tx <= (x + width); tx += tileWidth) {
-    tx = min(x + width, tx);
-    for (float ty = y; ty <= (y + height); ty += tileHeight) {
-      ty = min(y + height, ty);
+  for (float tx = x; tx <= (x + width); tx += width) {
+    //tx = min(x + width, tx);
+    for (float ty = y; ty <= (y + height); ty += height) {
+      //ty = min(y + height, ty);
       if (Engine::map->getTile(tx, ty)) {
         collision = true;
         //distance between the tile center and the object center
-        float tileX = (((uint16_t)tx / tileWidth) * tileWidth);
-        float tileY = (((uint16_t)ty / tileHeight) * tileHeight);
+        float tileX = (((uint16_t)tx / (uint16_t)tileWidth) * (uint16_t)tileWidth);
+        float tileY = (((uint16_t)ty / (uint16_t)tileHeight) * (uint16_t)tileHeight);
         dx =  tileX + (tileWidth / 2) - x;
         dy =  tileY + (tileHeight / 2) - y;
         if ((dx >= 0) && (dy >= 0)) { //bottom right corner
@@ -92,7 +92,7 @@ void Object::update() {
           py = y - (tileY + tileHeight);
         } else { //bottom left corner
           px = x - (tileX + tileWidth);
-          py = (y + width) - tileY;
+          py = (y + height) - tileY;
         }
         if (abs(px) < abs(py)) { //horizontal collision
           x -= px;
@@ -131,7 +131,7 @@ void Object::interact(Object* obj) {
       py = y - (obj->y + obj->height);
     } else { //bottom left corner
       px = x - (obj->x + obj->width);
-      py = (y + width) - obj->y;
+      py = (y + height) - obj->y;
     }
     if (abs(px) < abs(py)) { //horizontal collision
       x -= px;

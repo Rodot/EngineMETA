@@ -8,7 +8,7 @@
 
 class Engine {
   public:
-    static float gravity, cameraX, cameraY;
+    static float gravity, cameraX, cameraY, cameraTargetX, cameraTargetY;
     static Object *objects[ENGINE_NUM_OBJECTS];
     static TileMap *map;
 
