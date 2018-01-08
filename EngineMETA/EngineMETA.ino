@@ -30,30 +30,17 @@ void loop() {
   if (gb.buttons.pressed(BUTTON_A)) {
     Engine::gravity *= -1;
   }
-  Engine::cameraX = Engine::objects[0]->getCenterX() - gb.display.width() / 2;
-  Engine::cameraY = Engine::objects[0]->getCenterY() - gb.display.height() / 2;
+  //Engine::cameraX = Engine::objects[0]->getCenterX() - gb.display.width() / 2;
+  //Engine::cameraY = Engine::objects[0]->getCenterY() - gb.display.height() / 2;
   if (gb.buttons.pressed(BUTTON_B)) {
     for (uint16_t i = 0; i < ENGINE_NUM_OBJECTS; i++) {
       Engine::objects[i]->x = random(8, 72);
       Engine::objects[i]->y = random(8, 56);
-      Engine::objects[i]->width = random(4,8);
-      Engine::objects[i]->height = random(4,8);
+      Engine::objects[i]->width = 8;
+      Engine::objects[i]->height = 8;
       Engine::objects[i]->vx = random(0, 3) - 1;
       Engine::objects[i]->vy = random(0, 3) - 1;
       }
-    Engine::objects[0]->x = random(8, 72);
-    Engine::objects[0]->y = random(8, 56);
-    Engine::objects[0]->width = random(4, 8);
-    Engine::objects[0]->height = random(4, 8);
-    Engine::objects[0]->vx = random(0, 3) - 1;
-    Engine::objects[0]->vy = random(0, 3) - 1;
-
-    Engine::objects[1]->width = random(4, 20);
-    Engine::objects[1]->height = random(4, 20);
-    Engine::objects[1]->x = 35;
-    Engine::objects[1]->y = 25;
-    Engine::objects[1]->vx = 0;
-    Engine::objects[1]->vy = 0;
   }
   engine.update();
   engine.draw();

@@ -2,7 +2,7 @@
 #include <Gamebuino-Meta.h>
 
 //static variables
-float Engine::gravity = 0.4;
+float Engine::gravity = 0.3;
 float Engine::cameraX = 8;
 float Engine::cameraY = 8;
 Object* Engine::objects[ENGINE_NUM_OBJECTS];
