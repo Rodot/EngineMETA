@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "TileMap.h"
 
-#define ENGINE_NUM_OBJECTS 20
+#define ENGINE_NUM_OBJECTS 50
 
 class Engine {
   public:

@@ -3,11 +3,17 @@
 
 #include "Object.h"
 #include "Engine.h"
+#include "Bullet.h"
 
-class Player : public Object{
-  virtual void update();
-  virtual void draw();
-  
+class Player : public Object {
+  public:
+    Player();
+    virtual void init();
+    virtual void die();
+    virtual void update();
+    virtual void draw();
+    int direction;
+
 };
 
 #endif // _PLAYER_H_

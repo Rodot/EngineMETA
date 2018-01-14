@@ -12,7 +12,6 @@ TileMap* Engine::map;
 
 void Engine::init() {
   addObject(new Player());
-  //while (addObject(new Object()));
   map = new TileMap();
 }
 
@@ -26,11 +25,15 @@ void Engine::clear() {
 void Engine::update() {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) continue;
+    if (objects[i]->life == 0) continue;
+    if (objects[i]->justCreated) continue;
     objects[i]->update();
 
     //interact with other objects
     for (int j = 0; j < ENGINE_NUM_OBJECTS; j++) {
       if (objects[j] == 0) continue;
+      if (objects[j]->life == 0) continue;
+      if (objects[j]->justCreated) continue;
       if (i == j) {
         continue;
       }
@@ -38,13 +41,32 @@ void Engine::update() {
         objects[i]->interact(objects[j]);
       }
     }
-    //delete objects going out of the map
+    //kill objects going out of the map
     if (  (objects[i]->x < 0)
           || (objects[i]->y < 0)
           || (objects[i]->x > (map->widthTiles * map->tileWidth))
           || (objects[i]->y > (map->heightTiles * map->tileHeight))) {
+      objects[i]->life = 0;
+    }
+  }
+
+  //unallocate dead objects
+  for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
+    if (objects[i] == 0) continue;
+    if (objects[i]->life <= 0) {
+      objects[i]->die();
       delete objects[i];
       objects[i] = NULL;
+    }
+  }
+
+  draw();
+
+  //mark all newly created objects as no longer new
+  for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
+    if (objects[i] == 0) continue;
+    if (objects[i]->justCreated) {
+      objects[i]->justCreated = false;
     }
   }
 }
@@ -57,15 +79,17 @@ void Engine::draw() {
   }
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) continue;
-    gb.display.setColor(WHITE);
+    if (objects[i]->justCreated) continue;
+    gb.display.setColor(GRAY);
     objects[i]->draw();
   }
+  gb.display.setColor(WHITE);
   gb.display.print(gb.getCpuLoad());
   gb.display.print("% ");
-  gb.display.print(gb.getFreeRam());
-  gb.display.print(" ");
-  int16_t num = 0;
-  for (int16_t i = 0; i < ENGINE_NUM_OBJECTS; i++) {
+  gb.display.print((100 * gb.getFreeRam()) / 32768);
+  gb.display.print("% ");
+  int num = 0;
+  for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] != 0) num++;
   }
   gb.display.print(num);
@@ -73,7 +97,7 @@ void Engine::draw() {
   gb.display.println(ENGINE_NUM_OBJECTS);
 }
 
-int Engine::addObject(Object* object) {
+int Engine::addObject(Object * object) {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) {
       objects[i] = object;
@@ -83,7 +107,7 @@ int Engine::addObject(Object* object) {
   return 0; //no more space
 }
 
-void Engine::setTileMap(TileMap* tileMap) {
+void Engine::setTileMap(TileMap * tileMap) {
   map = tileMap;
 }
 

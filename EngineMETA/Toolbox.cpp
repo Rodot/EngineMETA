@@ -6,14 +6,14 @@ float norm(float n){
   if (n == 0) return 0.0f;
 }
 
-bool collidePointRect(int16_t x1, int16_t y1 ,int16_t x2 ,int16_t y2, int16_t w, int16_t h){
+bool collidePointRect(int x1, int y1 ,int x2 ,int y2, int w, int h){
   if((x1>=x2)&&(x1<x2+w))
   if((y1>=y2)&&(y1<y2+h))
   return true;
   return false;
 }
 
-bool collideRectRect(int16_t x1, int16_t y1, int16_t w1, int16_t h1 ,int16_t x2 ,int16_t y2, int16_t w2, int16_t h2){
+bool collideRectRect(int x1, int y1, int w1, int h1 ,int x2 ,int y2, int w2, int h2){
   return !( x2     >=  x1+w1  || 
             x2+w2  <=  x1     || 
             y2     >=  y1+h1  ||

@@ -2,20 +2,28 @@
 #define  _OBJECT_H_
 
 #include <Arduino.h>
+#include <Gamebuino-Meta.h>
+
 
 class Object {
   public:
-    float x, y, vx, vy, width, height, bounce, friction;
-    int16_t life;
+    float x, y, vx, vy, width, height, bounce, friction, density;
+    int life;
+    bool collideMap, collideObjects, justCreated;
+    Color color;
 
     Object();
     Object(float X, float Y, float W, float H, float VX, float VY);
-    void init();
+    virtual void init();
     virtual void update();
-    void interact(Object* obj);
+    virtual void die();
+    virtual void updatePhysics();
+    virtual void collideMapX();
+    virtual void collideMapY();
+    virtual void interact(Object* obj);
     virtual void draw();
-    int16_t collideTile();
-    int16_t collide(Object* obj);
+    int collidingTile();
+    int colliding(Object* obj);
     float getCenterX();
     float getCenterY();
 };
