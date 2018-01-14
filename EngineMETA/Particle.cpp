@@ -8,7 +8,7 @@ Particle::Particle(float X, float Y, float VX, float VY, float W, float H, boole
   vy = VY;
   width = W;
   height = H;
-  density = 0.5;
+  density = 2;
   bounce = 0.4;
   collideMap = collide;
   collideObjects = false;

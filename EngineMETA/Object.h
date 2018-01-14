@@ -7,7 +7,7 @@
 
 class Object {
   public:
-    float x, y, vx, vy, width, height, bounce, friction, density;
+    float x, y, vx, vy, ax, ay, width, height, bounce, friction, density;
     int life;
     bool collideMap, collideObjects, justCreated;
     Color color;
@@ -18,8 +18,8 @@ class Object {
     virtual void update();
     virtual void die();
     virtual void updatePhysics();
-    virtual void collideMapX();
-    virtual void collideMapY();
+    virtual int collideMapX();
+    virtual int collideMapY();
     virtual void interact(Object* obj);
     virtual void draw();
     int collidingTile();

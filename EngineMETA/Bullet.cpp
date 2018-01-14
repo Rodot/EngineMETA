@@ -4,11 +4,11 @@ Bullet::Bullet(float X, float Y, float VX, float VY, int direction) {
   Object::init();
   x = X;
   y = Y;
-  width = 4;
+  width = 3;
   height = 1;
   vx = 7 * norm(direction);
-  vy = VY + float(random(0, 10) - 5) / 10;
-  bounce = 0.25;
+  vy = float(random(0, 10) - 5) / 10;
+  bounce = 0.1;
   density = 0.5;
   life = 10;
   collideMap = true;
@@ -26,7 +26,7 @@ Bullet::Bullet(float X, float Y, float VX, float VY, int direction) {
 
 void Bullet::die() {
   life = 0;
-  Engine::addObject(new Particle(x + 1, y , -norm(vx) * 0.5, vy, 2, 1, true));
+  Engine::addObject(new Particle(x + 1, y , vx, vy, 2, 1, true));
 }
 
 void Bullet::update() {
@@ -39,10 +39,9 @@ void Bullet::update() {
 void Bullet::updatePhysics() {
   //water physics
   if ((Engine::map->getTile(getCenterX(), getCenterY()) == 2)) {
-    vy *= 0.8;
     vx *= 0.8;
   } else {
-    //normal physics
+    //vx *= 0.95;
   }
 }
 
@@ -52,8 +51,9 @@ void Bullet::interact(Object * obj) {
     obj->life -= 3;
     obj->vx += norm(vx);
     if (obj->life < 0) {
-      obj->vx = norm(vx) * 3;
+      obj->vx = norm(vx);
     }
+    vx = norm(vx) * (-0.5);
     life = 0;
     return;
   }

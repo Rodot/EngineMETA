@@ -11,8 +11,11 @@ class Player : public Object {
     virtual void init();
     virtual void die();
     virtual void update();
+    virtual void interact(Object* obj);
     virtual void draw();
     int direction;
+
+    bool jumped = false;
 
 };
 

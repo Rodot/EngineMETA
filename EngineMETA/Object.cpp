@@ -20,10 +20,12 @@ Object::Object(float X, float Y, float W, float H, float VX, float VY) {
 void Object::init() {
   x = random(8, 72);
   y = random(8, 56);
+  vx = 0;
+  vy = 0;
+  ax = 0;
+  ay = 0;
   width = 6;
   height = 6;
-  vx = random(0, 3) - 1;
-  vy = random(0, 3) - 1;
   bounce = 0.8;
   friction = 0.9;
   density = 1.2;
@@ -34,7 +36,7 @@ void Object::init() {
   color = GRAY;
 }
 
-void Object::die(){
+void Object::die() {
   Engine::addObject(new Particle(x, y , vx, -3, width, height, false));
 }
 
@@ -47,18 +49,20 @@ void Object::update() {
   if (abs(vx) < 0.02) vx = 0;
   if (abs(vy) < 0.02) vy = 0;
 
+  vx += ax;
   x += vx;
   collideMapX();
 
+  vy += ay;
   y += vy;
   collideMapY();
 
-  
+
 }
 
 void Object::updatePhysics() {
   //water physics
-  if ((Engine::map->getTile(getCenterX(), getCenterY()) == 2) && collideMap) {
+  if (collideMap && (Engine::map->getTile(getCenterX(), getCenterY()) == 2)) {
     vy += (Engine::gravity * (density - 1));
     vy *= 0.6;
     vx *= 0.6;
@@ -68,7 +72,7 @@ void Object::updatePhysics() {
   }
 }
 
-void Object::collideMapX() {
+int Object::collideMapX() {
   if (collideMap) {
     if (vx > 0) {
       if ((Engine::map->getTile(x + width, y) == 1) || (Engine::map->getTile(x + width, y + height) == 1)) {
@@ -76,6 +80,7 @@ void Object::collideMapX() {
         x = tileX - width - 0.01;
         vx *= - bounce;
         vy *= friction;
+        return 1;
       }
     }
     else {
@@ -84,12 +89,14 @@ void Object::collideMapX() {
         x = tileX + Engine::map->tileWidth + 0.01;
         vx *= - bounce;
         vy *= friction;
+        return 1;
       }
     }
   }
+  return 0;
 }
 
-void Object::collideMapY() {
+int Object::collideMapY() {
   if (collideMap) {
     if (vy > 0) {
       if ((Engine::map->getTile(x, y + height) == 1) || (Engine::map->getTile(x + width, y + height) == 1)) {
@@ -97,6 +104,7 @@ void Object::collideMapY() {
         y = tileY - height - 0.01;
         vy *= - bounce;
         vx *= friction;
+        return 1;
       }
     } else {
       if ((Engine::map->getTile(x, y) == 1) || (Engine::map->getTile(x + width, y) == 1)) {
@@ -104,9 +112,11 @@ void Object::collideMapY() {
         y = tileY + Engine::map->tileHeight + 0.01;
         vy *= - bounce;
         vx *= friction;
+        return 1;
       }
     }
   }
+  return 0;
 }
 
 void Object::interact(Object * obj) {
