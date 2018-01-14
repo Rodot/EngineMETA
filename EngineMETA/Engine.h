@@ -2,6 +2,7 @@
 #define	_ENGINE_H_
 
 #include "Object.h"
+#include "Player.h"
 #include "TileMap.h"
 
 #define ENGINE_NUM_OBJECTS 20
@@ -14,9 +15,10 @@ class Engine {
 
 
     void init();
+    void clear();
     void update();
     void draw();
-    int addObject(Object* object);
+    static int addObject(Object* object);
     void setTileMap(TileMap* tileMap);
 
 };

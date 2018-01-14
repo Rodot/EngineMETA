@@ -11,16 +11,24 @@ Object* Engine::objects[ENGINE_NUM_OBJECTS];
 TileMap* Engine::map;
 
 void Engine::init() {
+  addObject(new Player());
+  //while (addObject(new Object()));
+  map = new TileMap();
+}
+
+void Engine::clear() {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
-    objects[i] = 0; //NULL POINTER
+    delete objects[i];
+    objects[i] = NULL;
   }
-  map = 0;
 }
 
 void Engine::update() {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) continue;
     objects[i]->update();
+
+    //interact with other objects
     for (int j = 0; j < ENGINE_NUM_OBJECTS; j++) {
       if (objects[j] == 0) continue;
       if (i == j) {
@@ -30,8 +38,15 @@ void Engine::update() {
         objects[i]->interact(objects[j]);
       }
     }
+    //delete objects going out of the map
+    if (  (objects[i]->x < 0)
+          || (objects[i]->y < 0)
+          || (objects[i]->x > (map->widthTiles * map->tileWidth))
+          || (objects[i]->y > (map->heightTiles * map->tileHeight))) {
+      delete objects[i];
+      objects[i] = NULL;
+    }
   }
-
 }
 
 void Engine::draw() {
@@ -43,12 +58,19 @@ void Engine::draw() {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) continue;
     gb.display.setColor(WHITE);
-    if (i == 0)   gb.display.setColor(LIGHTBLUE);
     objects[i]->draw();
   }
   gb.display.print(gb.getCpuLoad());
-  gb.display.print("%");
-  gb.display.println(gb.getFreeRam());
+  gb.display.print("% ");
+  gb.display.print(gb.getFreeRam());
+  gb.display.print(" ");
+  int16_t num = 0;
+  for (int16_t i = 0; i < ENGINE_NUM_OBJECTS; i++) {
+    if (objects[i] != 0) num++;
+  }
+  gb.display.print(num);
+  gb.display.print("/");
+  gb.display.println(ENGINE_NUM_OBJECTS);
 }
 
 int Engine::addObject(Object* object) {

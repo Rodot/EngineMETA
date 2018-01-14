@@ -2,7 +2,7 @@
 
 #include <Gamebuino-Meta.h>
 #include "Engine.h"
-#include "Toolbox.c"
+#include "Toolbox.h"
 
 Object::Object() {
   x = random(8, 72);
@@ -13,15 +13,7 @@ Object::Object() {
   vy = random(0, 3) - 1;
   bounce = 0.8;
   friction = 0.98;
-}
-
-Object::Object(float X, float Y, float W, float H) {
-  x = X;
-  y = Y;
-  width = W;
-  height = H;
-  vx = 0;
-  vy = 0;
+  life = 10;
 }
 
 Object::Object(float X, float Y, float W, float H, float VX, float VY) {
@@ -31,6 +23,9 @@ Object::Object(float X, float Y, float W, float H, float VX, float VY) {
   vy = VY;
   width = W;
   height = H;
+  bounce = 0.8;
+  friction = 0.98;
+  life = 10;
 }
 
 void Object::update() {

@@ -6,14 +6,14 @@
 class Object {
   public:
     float x, y, vx, vy, width, height, bounce, friction;
+    int16_t life;
 
     Object();
-    Object(float X, float Y, float W, float H);
     Object(float X, float Y, float W, float H, float VX, float VY);
     void init();
-    void update();
+    virtual void update();
     void interact(Object* obj);
-    void draw();
+    virtual void draw();
     int16_t collideTile();
     int16_t collide(Object* obj);
     float getCenterX();
