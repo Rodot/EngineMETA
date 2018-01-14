@@ -61,20 +61,31 @@ void Player::update() {
 
   //limit speeds
   vx = constrain(vx, -3, 3);
-  vy = constrain(vy, -3, 3);
+  vy = constrain(vy, -5, 5);
   if (abs(vx) < 0.02) vx = 0;
   if (abs(vy) < 0.02) vy = 0;
 
   bounce = 0;
-  friction = 0;
+  if (vy >= 0) friction = 0.8;
+  if (vy < 0) friction = 1;
   vx += ax;
   x += vx;
-  collideMapX();
+  int collided = collideMapX();
+  //wall jump
+  if ((vy > 0) && collided) {
+    if (gb.buttons.pressed(BUTTON_UP)) {
+      vy = -3;
+      vx = - direction * 5;
+      jumped = true;
+    }
+  }
 
   friction = 0.6;
   vy += ay;
   y += vy;
-  if ((vy > 0) && collideMapY()) {
+  bool falling = (vy > 0) ? true : false;
+  collided = collideMapY();
+  if (falling && collided) {
     jumped = false;
   }
 
