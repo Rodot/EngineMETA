@@ -101,10 +101,11 @@ int Engine::addObject(Object * object) {
   for (int i = 0; i < ENGINE_NUM_OBJECTS; i++) {
     if (objects[i] == 0) {
       objects[i] = object;
-      return 1; //object created
+      return i; //object created
     }
   }
-  return 0; //no more space
+  delete object;
+  return -1; //no more space
 }
 
 void Engine::setTileMap(TileMap * tileMap) {

@@ -141,6 +141,9 @@ void Player::interact(Object * obj) {
 
       } else { //vertical collision
         y -= (py + 0.01);
+        if(y > 0){
+          jumped = false;
+        }
 
         float v1 = vy;
         float m1 = width * height * density;
